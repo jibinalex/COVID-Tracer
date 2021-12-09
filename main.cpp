@@ -179,14 +179,14 @@ int main()
             //Print options
             cout << endl;
             cout << "Main Menu:" << endl;
-            cout << "0. Exit............................................" << endl;
-            cout << "1. Change User....................................." << endl;
-            cout << "2. Add Connection.................................." << endl;
-            cout << "3. Print User Details.............................." << endl;
-            cout << "4. Print All User Contacts........................." << endl;
-            cout << "5. Print Shortest Path to Infected................." << endl;
-            cout << "6. Generate Random Graph (Debugging)..............." << endl;
-
+            cout << "0. Exit.........................................................." << endl;
+            cout << "1. Change User..................................................." << endl;
+            cout << "2. Add Connection................................................" << endl;
+            cout << "3. Print User Details............................................" << endl;
+            cout << "4. Print All User Contacts......................................." << endl;
+            cout << "5. Print Shortest Path to Infected..............................." << endl;
+            cout << "6. Show Number of Users in the Graph............................." << endl;
+            cout << "7. Generate Random Graph 100k Vertices (Debugging)..............." << endl;
 
             string command;
             getline(cin,  command);
@@ -218,11 +218,11 @@ int main()
             }
             else if (command == "6")
             {
-                graph.randomGraph();
+                cout << graph.getNumUsers() << endl;
             }
             else if (command == "7")
             {
-                cout << graph.getNumUsers() << endl;
+                graph.randomGraph();
             }
             else
                 cout << "Invalid input." << endl << endl;

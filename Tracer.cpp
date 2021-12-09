@@ -183,7 +183,7 @@ void Tracer::printShortestPathToInfected()
     }
     else
     {
-        cout << "No one that you've been in contact has been in contact with someone infected." << endl;
+        cout << "No one that you've been in contact with has been in contact with someone infected." << endl;
     }
 
 }
@@ -245,7 +245,7 @@ void Tracer::randomGraph()
         }
 
 
-        for (int i=0; i<6; i++)
+        for (int i=0; i<7; i++)
         {
             strId += to_string((rand() % 9) + 0);
         }
@@ -307,8 +307,6 @@ vector<int> Tracer::djikstraShortestPathToInfected()
             }
         }
     }
-
-    cout << "Here" << endl;
 
     vector<int> weights(numUsers, INT_MAX);
     vector<int> parents(numUsers, -1);
