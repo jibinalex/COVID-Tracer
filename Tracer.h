@@ -7,32 +7,31 @@ class Tracer
 {
     struct Person
     {
-        string firstName;
-        string lastName;
-        string nickName;
+        string name;
+        string id;
         bool infected;
 
         Person()
         {
-            firstName = "no first name";
-            lastName = "no last name";
+            name = "no name";
             infected = false;
         }
-        Person(string newFirstName, string newLastName, string newNickName, bool isInfected)
+        Person(string newName, string newID, bool isInfected)
         {
-            firstName = newFirstName;
-            lastName = newLastName;
-            nickName = newNickName;
+            name = newName;
+            id = newID;
             infected = isInfected;
         }
     };
+
+    bool testing = false;
 
     //Number of vertices (people)
     int numUsers = 0;
     int currentUserIndex = -1;
 
-    unordered_map<string, int> nickNameAdjListIndex;//<nickname, adjlist index>
-    set<string> takenNicknames; // set of all taken nicknames
+    unordered_map<string, int> idAdjListIndex;//<id, adjlist index>
+    set<string> takenIDs; // set of all taken nicknames
 
     //pair< User, vector< pair<Person, days last met> >
     vector< pair<Person, vector<pair<Person, int>>> > adjList;
@@ -40,19 +39,27 @@ class Tracer
 public:
     //Graph Functions
     bool isEmpty();
-    void selectUser(string firstN, string lastN, string nickN, bool isInfected);
-    void addUser(string firstN, string lastN, string nickN, bool isInfected);
-    void addConnection(string firstN, string lastN, string nickN, bool infected, int daysSinceMet);
+    void selectUser(string name, string id, bool isInfected);
+    void addUser(string name, string id, bool isInfected);
+    void addNewConnection(string name, string id, bool infected, int daysSinceMet);
+    void addExistingConnection(string id, int daysLastMet);
+
+    //Getters
     int findPersonIndex(Person target);
+    bool idExists(string id);
+    bool isConnected(string id);
+    int getNumUsers();
 
     //Print Functions
-    void printRisk(Person src);
     void printShortestPathToInfected();
     void printUserDetails();
     void printAllUserContacts();
 
+    //Test
+    void randomGraph();
+
 private:
     //Shortest Path Getters
-    vector<Person> djikstraShortestPathToInfected(Person user);
-    vector<Person> bellmanShortestPathToInfected(Person user);
+    vector<int> djikstraShortestPathToInfected();
+    vector<int> bellmanShortestPathToInfected();
 };

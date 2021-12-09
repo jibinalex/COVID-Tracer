@@ -2,6 +2,8 @@
 #include <sstream>
 #include "Tracer.h"
 
+using namespace std;
+
 bool isNum(string id) //Returns true if id is 8 digits and is only numbers
 {
     bool valid = true;
@@ -26,98 +28,135 @@ bool isNum(string id) //Returns true if id is 8 digits and is only numbers
 
 void addUserPrompt(Tracer &graph)
 {
-    string firstName;
-    string lastName;
-    string nickName;
-    string YN;
-    bool isInfected;
+    string id;
+    cout << "What is your ID?" << endl;
+    getline(cin, id);
 
-    cout << "What is your first name?" << endl;
-    getline(cin, firstName);
-    cout << "What is your last name?" << endl;
-    getline(cin, lastName);
-    cout << "What is your nick name?" << endl;
-    getline(cin,  nickName);
-
-    bool validAnswer = false;
-    while (!validAnswer)
+    if (!graph.idExists(id))
     {
+        string name;
         string YN;
+        bool isInfected;
 
-        cout << "Are you infected? Y/N" << endl;
-        getline(cin, YN);
+        cout << "What is your name?" << endl;
+        getline(cin, name);
 
-        if (YN == "Y")
+
+        bool validAnswer = false;
+        while (!validAnswer)
         {
-            validAnswer = true;
-            isInfected = true;
+            string YN;
+
+            cout << "Are you infected? Y/N" << endl;
+            getline(cin, YN);
+
+            if (YN == "Y")
+            {
+                validAnswer = true;
+                isInfected = true;
+            }
+            else if (YN == "N")
+            {
+                validAnswer = true;
+                isInfected = false;
+            }
+            else
+                cout << "Answer 'Y' or 'N'." << endl;
         }
-        else if (YN == "N")
-        {
-            validAnswer = true;
-            isInfected = false;
-        }
-        else
-            cout << "Answer 'Y' or 'N'." << endl;
+
+        graph.selectUser(name, id, isInfected);
     }
-
-    graph.selectUser(firstName, lastName, nickName, isInfected);
+    else
+    {
+        graph.selectUser("", id, false);
+    }
 }
 void addConnectionPrompt(Tracer &graph)
 {
-    string firstName;
-    string lastName;
-    string nickName;
-    bool isInfected;
-    int daysSinceLastMet;
+    string id;
+    cout << "What is their ID?" << endl;
+    getline(cin,  id);
 
-    cout << "What is their first name?" << endl;
-    cin >> firstName;
-    cout << "What is their last name?" << endl;
-    cin >> lastName;
-    cout << "What is their nick name?" << endl;
-    cin >> nickName;
-
-    bool validAnswer = false;
-    while (!validAnswer)
+    if (!graph.idExists(id))
     {
-        string YN;
+        string name;
+        bool isInfected;
+        int daysSinceLastMet;
 
-        cout << "Are they infected? Y/N" << endl;
-        cin >> YN;
+        cout << "What is their name?" << endl;
+        getline(cin, name);
 
-        if (YN == "Y")
+        bool validAnswer = false;
+        while (!validAnswer)
         {
-            validAnswer = true;
-            isInfected = true;
+            string YN;
+
+            cout << "Are they infected? Y/N" << endl;
+            getline(cin, YN);;
+
+            if (YN == "Y")
+            {
+                validAnswer = true;
+                isInfected = true;
+            }
+            else if (YN == "N")
+            {
+                validAnswer = true;
+                isInfected = false;
+            }
+            else
+                cout << "Answer 'Y' or 'N'." << endl;
         }
-        else if (YN == "N")
+
+        validAnswer = false;
+        while (!validAnswer)
         {
-            validAnswer = true;
-            isInfected = false;
+            string answer;
+
+            cout << "How many days since you last meet them?" << endl;
+            getline(cin, answer);;
+
+            if (isNum(answer))
+            {
+                validAnswer = true;
+                daysSinceLastMet = stoi(answer);
+            }
+            else
+                cout << "Invalid input time. Input maybe too long ago or have invalid characters." << endl;
+        }
+
+        graph.addNewConnection(name, id, isInfected, daysSinceLastMet);
+    }
+    else
+    {
+        if (!graph.isConnected(id))
+        {
+            bool validAnswer = false;
+            int daysSinceLastMet;
+
+            validAnswer = false;
+            while (!validAnswer)
+            {
+                string answer;
+
+                cout << "How many days since you last meet them?" << endl;
+                getline(cin, answer);;
+
+                if (isNum(answer))
+                {
+                    validAnswer = true;
+                    daysSinceLastMet = stoi(answer);
+                }
+                else
+                    cout << "Invalid input time. Input maybe too long ago or have invalid characters." << endl;
+            }
+
+            graph.addExistingConnection(id, daysSinceLastMet);
         }
         else
-            cout << "Answer 'Y' or 'N'." << endl;
+            cout << "Already connected!" << endl;
+
     }
-
-    validAnswer = false;
-    while (!validAnswer)
-    {
-        string answer;
-
-        cout << "How many days since you last meet them?" << endl;
-        cin >> answer;
-
-        if (isNum(answer))
-        {
-            validAnswer = true;
-            daysSinceLastMet = stoi(answer);
-        }
-        else
-            cout << "Invalid input time. Input maybe too long ago or have invalid characters." << endl;
-    }
-
-    graph.addConnection(firstName, lastName, nickName, isInfected, daysSinceLastMet);
 }
 
 int main()
@@ -140,12 +179,13 @@ int main()
             //Print options
             cout << endl;
             cout << "Main Menu:" << endl;
-            cout << "0. Exit......................." << endl;
-            cout << "1. Change User................" << endl;
-            cout << "2. Add Connection............." << endl;
-            cout << "3. Print User Details........." << endl;
-            cout << "4. Print All User Contacts...." << endl;
-            cout << "5. Print Risk................." << endl;
+            cout << "0. Exit............................................" << endl;
+            cout << "1. Change User....................................." << endl;
+            cout << "2. Add Connection.................................." << endl;
+            cout << "3. Print User Details.............................." << endl;
+            cout << "4. Print All User Contacts........................." << endl;
+            cout << "5. Print Shortest Path to Infected................." << endl;
+            cout << "6. Generate Random Graph (Debugging)..............." << endl;
 
 
             string command;
@@ -171,6 +211,18 @@ int main()
             else if (command == "4")
             {
                 graph.printAllUserContacts();
+            }
+            else if (command == "5")
+            {
+                graph.printShortestPathToInfected();
+            }
+            else if (command == "6")
+            {
+                graph.randomGraph();
+            }
+            else if (command == "7")
+            {
+                cout << graph.getNumUsers() << endl;
             }
             else
                 cout << "Invalid input." << endl << endl;
